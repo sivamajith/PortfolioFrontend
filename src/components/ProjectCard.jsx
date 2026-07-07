@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { motion } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
+import absUrl from '../utils/urls';
 
 const CAT_COLORS = { Branding:'#FF4757','UI/UX':'#4ECDC4',Motion:'#FFD166',Print:'#95E1D3',Photography:'#F38181',Illustration:'#AA96DA',Other:'#888' };
 const MotionBox = motion.create(Box);
@@ -96,12 +97,12 @@ export default function ProjectCard({ project, index }) {
         {/* Media - Auto-play video on hover/scroll or show thumbnail */}
         {isVideo ? (
           <>
-            {(hovered || inView) && project.mediaUrl ? (
+              {(hovered || inView) && project.mediaUrl ? (
               // Auto-playing video on hover/scroll
               <Box
                 component="video"
                 ref={hoverVideoRef}
-                src={project.mediaUrl}
+                src={absUrl(project.mediaUrl)}
                 muted
                 loop
                 playsInline
@@ -120,7 +121,7 @@ export default function ProjectCard({ project, index }) {
                 {project.thumbnailUrl ? (
                   <Box
                     component="img"
-                    src={project.thumbnailUrl}
+                    src={absUrl(project.thumbnailUrl)}
                     alt={project.title}
                     onError={() => console.warn('Thumbnail load failed for:', project.title)}
                     sx={{
@@ -165,9 +166,9 @@ export default function ProjectCard({ project, index }) {
             </Box>
           </>
         ) : (
-          <Box
+            : <Box
             component="img"
-            src={project.mediaUrl}
+            src={absUrl(project.mediaUrl)}
             alt={project.title}
             loading="lazy"
             onError={() => console.warn('Image load failed for:', project.title)}
@@ -333,10 +334,10 @@ export default function ProjectCard({ project, index }) {
           {isVideo ? (
             <video
               ref={videoRef}
-              src={project.mediaUrl}
+              src={absUrl(project.mediaUrl)}
               controls
               autoPlay
-              poster={project.thumbnailUrl}
+              poster={absUrl(project.thumbnailUrl)}
               onError={() => console.warn('Modal video error for:', project.title)}
               style={{
                 width: '100%',
@@ -351,7 +352,7 @@ export default function ProjectCard({ project, index }) {
           ) : (
             <Box
               component="img"
-              src={project.mediaUrl}
+              src={absUrl(project.mediaUrl)}
               alt={project.title}
               onError={() => console.warn('Modal image error for:', project.title)}
               sx={{

@@ -20,6 +20,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import api from '../utils/api';
+import absUrl from '../utils/urls';
 
 const ACCENT = '#FF4757';
 const SECTIONS = [
@@ -312,12 +313,12 @@ function MediaMgr({ type, items, onRefresh, show }) {
                 <Box sx={{ position: 'relative', aspectRatio: '16/10', background: isVideo ? 'linear-gradient(135deg,#1a1a1a 0%,#0a0a0a 100%)' : '#0f0f0f', overflow: 'hidden' }}>
                   {isVideo
                     ? p.thumbnailUrl
-                      ? <Box component="img" src={p.thumbnailUrl} alt={p.title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
+                      ? <Box component="img" src={absUrl(p.thumbnailUrl)} alt={p.title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} onError={(e) => { e.target.style.display = 'none'; }} />
                       : <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, flexDirection: 'column', color: '#444' }}>
                           <Box sx={{ fontSize: '2.5rem' }}>🎬</Box>
                           <Typography sx={{ fontSize: '.75rem', color: '#555' }}>No thumbnail</Typography>
                         </Box>
-                    : <Box component="img" src={p.mediaUrl} alt={p.title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <Box component="img" src={absUrl(p.mediaUrl)} alt={p.title} sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   }
                   {p.featured && <Box sx={{ position: 'absolute', top: 7, left: 7, px: 1.2, py: .3, background: `${ACCENT}20`, border: `1px solid ${ACCENT}40`, borderRadius: '100px' }}><Typography sx={{ fontSize: '.6rem', color: ACCENT, fontWeight: 700 }}>FEATURED</Typography></Box>}
                   <Box className="actions" sx={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, opacity: 0, transition: 'opacity .25s' }}>
@@ -354,7 +355,7 @@ function MediaMgr({ type, items, onRefresh, show }) {
             {uploading ? (
               <Box><CircularProgress size={26} sx={{ color: accent, mb: 1 }} /><LinearProgress variant="determinate" value={upPct} sx={{ mt: 1, height: 3, borderRadius: 2, background: 'rgba(255,255,255,.05)', '& .MuiLinearProgress-bar': { background: accent } }} /><Typography sx={{ fontSize: '.75rem', color: '#555', mt: 1 }}>Uploading... {upPct}%</Typography></Box>
             ) : form.mediaUrl ? (
-              <Box>{isVideo ? <Box sx={{ fontSize: '2.5rem', mb: 1 }}>🎬</Box> : <Box component="img" src={form.mediaUrl} sx={{ maxHeight: 100, maxWidth: '100%', borderRadius: '8px', objectFit: 'contain', mb: 1 }} />}<Typography sx={{ fontSize: '.75rem', color: accent }}>✓ Uploaded · Click to replace</Typography></Box>
+              <Box>{isVideo ? <Box sx={{ fontSize: '2.5rem', mb: 1 }}>🎬</Box> : <Box component="img" src={absUrl(form.mediaUrl)} sx={{ maxHeight: 100, maxWidth: '100%', borderRadius: '8px', objectFit: 'contain', mb: 1 }} />}<Typography sx={{ fontSize: '.75rem', color: accent }}>✓ Uploaded · Click to replace</Typography></Box>
             ) : (
               <Box><CloudUploadIcon sx={{ fontSize: 36, color: '#444', mb: 1 }} /><Typography sx={{ fontSize: '.88rem', color: '#666', mb: .5 }}>Click to upload {isVideo ? 'video' : 'image'}</Typography><Typography sx={{ fontSize: '.72rem', color: '#444' }}>Cloudinary · Max 200MB</Typography></Box>
             )}
