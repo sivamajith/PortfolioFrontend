@@ -166,7 +166,7 @@ export default function ProjectCard({ project, index }) {
             </Box>
           </>
         ) : (
-            : <Box
+          <Box
             component="img"
             src={absUrl(project.mediaUrl)}
             alt={project.title}

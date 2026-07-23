@@ -2,14 +2,24 @@
 export function absUrl(u){
   if(!u) return '';
   try{
-    if(u.startsWith('http') || u.startsWith('data:')) return u;
-    // If backend provided a full API URL via VITE_API_URL, use its origin
-    const api = import.meta.env.VITE_API_URL || '';
+    if(u.startsWith('data:')) return u;
+    if(u.startsWith('http')){
+      // Upgrade http to https when page is served over https to avoid mixed-content
+      try{
+        if(window && window.location && window.location.protocol === 'https:' && u.startsWith('http://')){
+          return u.replace(/^http:\/\//, 'https://');
+        }
+      }catch(e){ }
+      return u;
+    }
+
+    const backendBase = (import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || '')
+      .replace(/\/api\/?$/,'')
+      .replace(/\/$/, '');
+
     if(u.startsWith('/')){
-      if(api){
-        // remove trailing /api if present
-        const base = api.replace(/\/api\/?$/,'');
-        return (base.endsWith('/')?base.slice(0,-1):base) + u;
+      if(backendBase){
+        return backendBase + u;
       }
       return window.location.origin + u;
     }

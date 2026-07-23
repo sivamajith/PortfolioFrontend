@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Button, Container, Grid, Paper, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import TwitterIcon from '@mui/icons-material/Twitter';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import LanguageIcon from '@mui/icons-material/Language';
 import { motion } from 'framer-motion';
 import { Toaster, toast } from 'react-hot-toast';
 import { useTheme } from '../context/ThemeContext';
@@ -18,6 +21,7 @@ const MotionBox = motion.create(Box);
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [loading, setLoading] = useState(false);
+  const [profile, setProfile] = useState({});
   const { isDark } = useTheme();
 
   const bgColor = isDark ? 'linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 100%)' : 'linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)';
@@ -26,6 +30,10 @@ export default function Contact() {
   const inputBg = isDark ? '#141414' : '#ffffff';
   const inputBorder = isDark ? 'rgba(255,255,255,.1)' : 'rgba(0,0,0,.1)';
   const cardBg = isDark ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.02)';
+
+  useEffect(() => {
+    api.get('/profile').then(res => setProfile(res.data || {})).catch(() => {});
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,6 +80,31 @@ export default function Contact() {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
   };
+
+  const socialPlatforms = [
+    { key: 'whatsapp', icon: WhatsAppIcon, label: 'WhatsApp', color: '#25D366' },
+    { key: 'linkedin', icon: LinkedInIcon, label: 'LinkedIn', color: '#0A66C2' },
+    { key: 'facebook', icon: FacebookIcon, label: 'Facebook', color: '#1877F2' },
+    { key: 'instagram', icon: InstagramIcon, label: 'Instagram', color: '#E4405F' },
+    { key: 'github', icon: GitHubIcon, label: 'GitHub', color: isDark ? '#999' : '#333' },
+    { key: 'behance', icon: LanguageIcon, label: 'Behance', color: '#1769FF' },
+  ];
+
+  const buildSocialHref = (key, value, fallbackValue) => {
+    const resolved = value || fallbackValue || '';
+    if (!resolved) return '#';
+    if (key === 'whatsapp') {
+      const digits = String(resolved).replace(/\D/g, '');
+      return digits ? `https://wa.me/${digits}` : resolved;
+    }
+    return resolved;
+  };
+
+  const contactItems = [
+    { icon: PhoneIcon, label: 'Phone', value: profile?.phone || '+91 9025155797', color: '#FF4757', href: profile?.phone ? `tel:${profile.phone}` : 'tel:+919025155797' },
+    { icon: EmailIcon, label: 'Email', value: profile?.email || 'pravineshaloschool@gmail.com', color: '#4ECDC4', href: profile?.email ? `mailto:${profile.email}` : 'mailto:pravineshaloschool@gmail.com' },
+    { icon: LocationOnIcon, label: 'Location', value: profile?.location || 'Nagercoil, Tamil Nadu', color: '#FFD166', href: '#' }
+  ];
 
   return (
     <Box sx={{ minHeight: '100vh', background: bgColor, py: 8, position: 'relative', overflow: 'hidden' }}>
@@ -279,17 +312,16 @@ export default function Contact() {
               sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
             >
               {/* Info Cards */}
-              {[
-                { icon: PhoneIcon, label: 'Phone', value: ' +91 9025155797', color: '#FF4757' },
-                { icon: EmailIcon, label: 'Email', value: 'pravineshaloschool@gmail.com', color: '#4ECDC4' },
-                { icon: LocationOnIcon, label: 'Location', value: 'Nagercoil, Tmail nadu', color: '#FFD166' }
-              ].map((item, i) => {
+              {contactItems.map((item, i) => {
                 const Icon = item.icon;
                 return (
                   <MotionBox
                     key={i}
                     variants={itemVariants}
-                    component={Paper}
+                    component={item.href === '#' ? Paper : 'a'}
+                    href={item.href === '#' ? undefined : item.href}
+                    target={item.href.startsWith('http') ? '_blank' : undefined}
+                    rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     sx={{
                       p: 3,
                       background: isDark ? 'rgba(20, 20, 20, 0.6)' : 'rgba(255, 255, 255, 0.7)',
@@ -298,7 +330,8 @@ export default function Contact() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 2,
-                      cursor: 'pointer',
+                      cursor: item.href === '#' ? 'default' : 'pointer',
+                      textDecoration: 'none',
                       transition: 'all 0.3s',
                       '&:hover': {
                         background: isDark ? 'rgba(20, 20, 20, 0.9)' : 'rgba(255, 255, 255, 0.9)',
@@ -335,12 +368,8 @@ export default function Contact() {
                 <Typography sx={{ fontSize: '.85rem', color: isDark ? '#555' : '#999', textTransform: 'uppercase', letterSpacing: '.1em', mb: 2 }}>
                   Follow Us
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 1.5 }}>
-                  {[
-                    { icon: LinkedInIcon, label: 'LinkedIn', color: '#0A66C2' },
-                    { icon: TwitterIcon, label: 'Twitter', color: '#1DA1F2' },
-                    { icon: GitHubIcon, label: 'GitHub', color: isDark ? '#999' : '#333' }
-                  ].map((social, i) => {
+                <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+                  {socialPlatforms.filter(social => profile?.[social.key]).map((social, i) => {
                     const Icon = social.icon;
                     return (
                       <MotionBox
@@ -349,6 +378,11 @@ export default function Contact() {
                         whileTap={{ scale: 0.95 }}
                       >
                         <IconButton
+                          component="a"
+                          href={buildSocialHref(social.key, profile[social.key], profile.phone)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={social.label}
                           sx={{
                             width: 48,
                             height: 48,

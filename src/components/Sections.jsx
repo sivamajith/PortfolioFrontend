@@ -4,10 +4,27 @@ import NorthEastIcon from '@mui/icons-material/NorthEast';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import StarIcon from '@mui/icons-material/Star';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import EmailIcon from '@mui/icons-material/Email';
+import LanguageIcon from '@mui/icons-material/Language';
 import ProjectCard from './ProjectCard';
 import { useTheme } from '../context/ThemeContext';
 
 const CAT_COLORS = { Branding:'#FF4757','UI/UX':'#4ECDC4',Motion:'#FFD166',Print:'#95E1D3',Photography:'#F38181',Illustration:'#AA96DA' };
+
+const buildSocialHref = (key, value, fallbackValue) => {
+  const resolved = value || fallbackValue || '';
+  if (!resolved) return '#';
+  if (key === 'whatsapp') {
+    const digits = String(resolved).replace(/\D/g, '');
+    return digits ? `https://wa.me/${digits}` : resolved;
+  }
+  return resolved;
+};
 
 // ─── Projects Section ───────────────────────────────────────────────────────
 export function ProjectsSection({ projects }) {
@@ -314,11 +331,25 @@ export function ContactSection({ profile }) {
           )}
         </Box>
 
-        {profile?.email && <Typography sx={{ color: isDark ? '#444' : '#bbb', fontSize: '.9rem', mb: 4 }}>{profile.email}</Typography>}
+        {profile?.email && (
+          <Box component="a" href={`mailto:${profile.email}`} sx={{ display: 'inline-flex', alignItems: 'center', gap: 1.1, px: 2.2, py: 1.1, mb: 4, borderRadius: '999px', border: `1px solid ${isDark ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.08)'}`, background: isDark ? 'rgba(255,255,255,.03)' : 'rgba(0,0,0,.02)', color: textColor, textDecoration: 'none', transition: 'all .2s', '&:hover': { transform: 'translateY(-1px)', borderColor: 'rgba(255,71,87,.3)', color: '#FF4757' } }}>
+            <EmailIcon fontSize="small" sx={{ color: '#4ECDC4' }} />
+            <Typography sx={{ fontSize: '.92rem', fontWeight: 600 }}>{profile.email}</Typography>
+          </Box>
+        )}
 
-        <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center' }}>
-          {[['behance','Be'],['dribbble','Dr'],['instagram','Ig'],['linkedin','Li'],['github','GH'],['twitter','X']].filter(([k]) => profile?.[k]).map(([k, l]) => (
-            <Box key={k} component="a" href={profile[k]} target="_blank" rel="noopener noreferrer" sx={{ fontSize: '.82rem', color: isDark ? '#444' : '#bbb', textDecoration: 'none', fontWeight: 700, letterSpacing: '.05em', '&:hover': { color: textColor }, transition: 'color .2s' }}>{l}</Box>
+        <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'center', flexWrap: 'wrap' }}>
+          {[
+            { key: 'whatsapp', icon: WhatsAppIcon, href: buildSocialHref('whatsapp', profile?.whatsapp, profile?.phone), color: '#25D366' },
+            { key: 'linkedin', icon: LinkedInIcon, href: buildSocialHref('linkedin', profile?.linkedin), color: '#0A66C2' },
+            { key: 'facebook', icon: FacebookIcon, href: buildSocialHref('facebook', profile?.facebook), color: '#1877F2' },
+            { key: 'instagram', icon: InstagramIcon, href: buildSocialHref('instagram', profile?.instagram), color: '#E4405F' },
+            { key: 'github', icon: GitHubIcon, href: buildSocialHref('github', profile?.github), color: isDark ? '#999' : '#333' },
+            { key: 'behance', icon: LanguageIcon, href: buildSocialHref('behance', profile?.behance), color: '#1769FF' },
+          ].filter(({ href }) => href && href !== '#').map(({ key, icon: Icon, href, color }) => (
+            <Box key={key} component="a" href={href} target="_blank" rel="noopener noreferrer" aria-label={key} sx={{ width: 44, height: 44, borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: `1px solid ${color}30`, background: `${color}14`, color, transition: 'all .2s', '&:hover': { transform: 'translateY(-2px)', background: `${color}22`, borderColor: `${color}60` } }}>
+              <Icon fontSize="small" />
+            </Box>
           ))}
         </Box>
       </Box>
@@ -348,9 +379,19 @@ export function Footer({ profile }) {
             <Typography sx={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: '1rem', color: textColor }}>{profile?.name || 'Portfolio'}</Typography>
           </Box>
           <Typography sx={{ color: secondaryText, fontSize: '.87rem', lineHeight: 1.7, mb: 3, maxWidth: 280 }}>{profile?.title || 'Graphic Designer'} — crafting visual experiences that leave lasting impressions.</Typography>
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            {[['behance','Be'],['dribbble','Dr'],['instagram','Ig'],['linkedin','Li']].filter(([k]) => profile?.[k]).map(([k, l]) => (
-              <Box key={k} component="a" href={profile[k]} target="_blank" rel="noopener noreferrer" sx={{ width: 36, height: 36, borderRadius: '9px', border: isDark ? '1px solid rgba(255,255,white,.08)' : '1px solid rgba(0,0,0,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.72rem', color: tertiaryText, fontWeight: 700, textDecoration: 'none', transition: 'all .2s', '&:hover': { color: linkHoverColor, borderColor: isDark ? 'rgba(255,255,white,.2)' : 'rgba(0,0,0,.2)', background: isDark ? 'rgba(255,255,255,.04)' : 'rgba(0,0,0,.04)' } }}>{l}</Box>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {[
+              { key: 'email', icon: EmailIcon, href: profile?.email ? `mailto:${profile.email}` : '#', color: '#4ECDC4' },
+              { key: 'whatsapp', icon: WhatsAppIcon, href: buildSocialHref('whatsapp', profile?.whatsapp, profile?.phone), color: '#25D366' },
+              { key: 'linkedin', icon: LinkedInIcon, href: buildSocialHref('linkedin', profile?.linkedin), color: '#0A66C2' },
+              { key: 'facebook', icon: FacebookIcon, href: buildSocialHref('facebook', profile?.facebook), color: '#1877F2' },
+              { key: 'instagram', icon: InstagramIcon, href: buildSocialHref('instagram', profile?.instagram), color: '#E4405F' },
+              { key: 'github', icon: GitHubIcon, href: buildSocialHref('github', profile?.github), color: isDark ? '#999' : '#333' },
+              { key: 'behance', icon: LanguageIcon, href: buildSocialHref('behance', profile?.behance), color: '#1769FF' },
+            ].filter(({ key, href }) => key === 'email' ? profile?.email : href && href !== '#').map(({ key, icon: Icon, href, color }) => (
+              <Box key={key} component="a" href={href || '#'} target={key === 'email' ? undefined : '_blank'} rel={key === 'email' ? undefined : 'noopener noreferrer'} aria-label={key} sx={{ width: 36, height: 36, borderRadius: '9px', border: isDark ? '1px solid rgba(255,255,white,.08)' : '1px solid rgba(0,0,0,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: color || tertiaryText, textDecoration: 'none', transition: 'all .2s', '&:hover': { color: linkHoverColor, borderColor: isDark ? 'rgba(255,255,white,.2)' : 'rgba(0,0,0,.2)', background: isDark ? 'rgba(255,255,255,.04)' : 'rgba(0,0,0,.04)' } }}>
+                <Icon fontSize="small" />
+              </Box>
             ))}
           </Box>
         </Grid>

@@ -1,11 +1,10 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, Button, Grid } from '@mui/material';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useTheme } from '../context/ThemeContext';
 
-const ParticleField = lazy(() => import('./3D/ParticleField'));
-const AnimatedCube = lazy(() => import('./3D/AnimatedCube'));
+// 3D animations removed — placeholders used instead
 
 const CATEGORY_COLORS = { Branding: '#FF4757', 'UI/UX': '#4ECDC4', Motion: '#FFD166', Print: '#95E1D3', Photography: '#F38181', Illustration: '#AA96DA' };
 
@@ -61,12 +60,8 @@ export default function HeroSection({ profile, projects }) {
   return (
     <Box sx={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden', background: bgColor, pt: { xs: 12, md: 10 }, pb: 10 }}>
 
-      {/* 3D Particle field background */}
-      <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-        <Suspense fallback={null}>
-          <ParticleField particleCount={500} />
-        </Suspense>
-      </Box>
+      {/* 3D Particle field removed — subtle static background placeholder */}
+      <Box sx={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', background: isDark ? 'radial-gradient(circle at 10% 20%, rgba(255,71,87,0.02), transparent 20%), radial-gradient(circle at 90% 80%, rgba(255,71,87,0.015), transparent 25%)' : 'radial-gradient(circle at 10% 20%, rgba(255,71,87,0.01), transparent 20%), radial-gradient(circle at 90% 80%, rgba(0,0,0,0.01), transparent 25%)' }} />
 
       {/* Background noise texture */}
       <Box sx={{ position: 'absolute', inset: 0, opacity: isDark ? 0.025 : 0.01, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize: '200px', pointerEvents: 'none' }} />
@@ -129,12 +124,8 @@ export default function HeroSection({ profile, projects }) {
         {/* RIGHT - 3D Cube + floating project cards */}
         <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center', alignItems: 'center', opacity: v ? 1 : 0, transition: 'all 1s ease .25s', height: 500 }}>
           <Box sx={{ position: 'relative', width: '100%', height: '100%', maxWidth: 420 }}>
-            {/* 3D Animated Cube */}
-            <Suspense fallback={<Box sx={{ width: '100%', height: '100%', background: isDark ? '#1a1a1a' : '#f0f0f0', borderRadius: '20px' }} />}>
-              <Box sx={{ width: '100%', height: '100%', borderRadius: '20px', overflow: 'hidden' }}>
-                <AnimatedCube scale={1.5} interactive={true} />
-              </Box>
-            </Suspense>
+            {/* 3D Animated Cube removed — static placeholder */}
+            <Box sx={{ width: '100%', height: '100%', borderRadius: '20px', overflow: 'hidden', background: isDark ? '#1a1a1a' : '#f0f0f0' }} />
 
             {/* Category tags floating */}
             <Box sx={{ position: 'absolute', top: 100, left: { xs: 10, md: -20 }, display: 'flex', flexDirection: 'column', gap: 1, zIndex: 10 }}>

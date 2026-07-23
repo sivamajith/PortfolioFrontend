@@ -3,8 +3,6 @@ import { Box, Typography, Button, Grid } from '@mui/material';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useTheme } from '../context/ThemeContext';
-import AnimatedCube from './3D/AnimatedCube';
-import ParticleField from './3D/ParticleField';
 
 const CATEGORY_COLORS = { Branding: '#FF4757', 'UI/UX': '#4ECDC4', Motion: '#FFD166', Print: '#95E1D3', Photography: '#F38181', Illustration: '#AA96DA' };
 

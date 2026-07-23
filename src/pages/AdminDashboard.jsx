@@ -789,7 +789,7 @@ function ProfileMgr({ profile, setProfile, show }) {
           <Divider sx={{ my: 3, borderColor: 'rgba(255,255,255,.06)' }} />
           <Typography sx={{ fontFamily: 'Space Grotesk', fontWeight: 700, color: '#F0EDE8', mb: 2, fontSize: '.95rem' }}>Social & Links</Typography>
           <Grid container spacing={2}>
-            {[['behance','Behance'],['dribbble','Dribbble'],['instagram','Instagram'],['linkedin','LinkedIn'],['github','GitHub'],['twitter','Twitter/X'],['resumeUrl','Resume PDF URL']].map(([k,l]) => (
+            {[['behance','Behance'],['facebook','Facebook'],['instagram','Instagram'],['linkedin','LinkedIn'],['github','GitHub'],['whatsapp','WhatsApp'],['resumeUrl','Resume PDF URL']].map(([k,l]) => (
               <Grid item xs={12} sm={6} key={k}><TextField label={l} {...f(k)} /></Grid>
             ))}
           </Grid>
